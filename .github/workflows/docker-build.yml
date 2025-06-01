@@ -27,4 +27,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: yourdockerhubusername/flask-docker-app:latest
+        tags: thepm002/flask-docker-app:latest
