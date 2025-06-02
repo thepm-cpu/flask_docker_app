@@ -1,48 +1,41 @@
-from flask import Flask, render_template, request, redirect
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
-DATABASE = 'guestbook.db'
 
-# Function to connect to SQLite database
-def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row  # allows us to access columns by name
-    return conn
+# Database config
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///guestbook.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Create the database table if it doesn't exist
-def init_db():
-    if not os.path.exists(DATABASE):
-        conn = get_db_connection()
-        conn.execute('''
-            CREATE TABLE messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                message TEXT NOT NULL
-            )
-        ''')
-        conn.commit()
-        conn.close()
+db = SQLAlchemy(app)
 
-# Home route: show all messages and the form
-@app.route("/", methods=["GET", "POST"])
+# Database model
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.String(500), nullable=False)
+
+# Route: Home page
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    conn = get_db_connection()
-    
-    if request.method == "POST":
-        name = request.form["name"]
-        message = request.form["message"]
-        conn.execute("INSERT INTO messages (name, message) VALUES (?, ?)", (name, message))
-        conn.commit()
-        return redirect("/")
-    
-    # Fetch messages from database
-    messages = conn.execute("SELECT * FROM messages ORDER BY id DESC").fetchall()
-    conn.close()
-    
-    return render_template("index.html", messages=messages)
+    if request.method == 'POST':
+        name = request.form['name']
+        message = request.form['message']
 
-if __name__ == "__main__":
-    init_db()
-    app.run(host="0.0.0.0", port=5000)
+        # Save to database
+        new_message = Message(name=name, message=message)
+        db.session.add(new_message)
+        db.session.commit()
+
+        return redirect(url_for('index'))
+
+    # Show all messages
+    messages = Message.query.all()
+    return render_template('index.html', messages=messages)
+
+# Create DB on first run
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
