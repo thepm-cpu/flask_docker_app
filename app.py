@@ -1,44 +1,38 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
 
-# Database config
-import os
-basedir = os.path.abspath(os.path.dirname(__file__))
+# Use /tmp directory for Render compatibility
 db_path = os.path.join('/tmp', 'guestbook.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Database model
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    message = db.Column(db.String(500), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    content = db.Column(db.String(200), nullable=False)
 
-# Route: Home page
-@app.route('/', methods=['GET', 'POST'])
+# This ensures database + table is created before first request
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+@app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'POST':
-        name = request.form['name']
-        message = request.form['message']
-
-        # Save to database
-        new_message = Message(name=name, message=message)
+    if request.method == "POST":
+        name = request.form["name"]
+        content = request.form["message"]
+        new_message = Message(name=name, content=content)
         db.session.add(new_message)
         db.session.commit()
-
-        return redirect(url_for('index'))
-
-    # Show all messages
+        return redirect("/")
+    
     messages = Message.query.all()
-    return render_template('index.html', messages=messages)
+    return render_template("index.html", messages=messages)
 
-# Create DB on first run
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")
