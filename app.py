@@ -5,8 +5,11 @@ import os
 app = Flask(__name__)
 
 # Database config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///guestbook.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+db_path = os.path.join('/tmp', 'guestbook.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+
 
 db = SQLAlchemy(app)
 
