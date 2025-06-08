@@ -31,6 +31,13 @@ def index():
     
     messages = Message.query.order_by(Message.timestamp.desc()).all()
     return render_template("index.html", messages=messages)
+@app.route("/delete/<int:message_id>", methods=["POST"])
+def delete_message(message_id):
+    message = Message.query.get_or_404(message_id)
+    db.session.delete(message)
+    db.session.commit()
+    return redirect("/")
+
 
 # ✅ This must come last
 if __name__ == "__main__":

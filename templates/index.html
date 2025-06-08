@@ -15,14 +15,20 @@
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Messages:</h2>
-    <ul>
-        {% for msg in messages %}
-            <li>
-                <strong>{{ msg.name }}</strong>: {{ msg.content }}<br>
-                <small>{{ msg.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</small>
-            </li>
-        {% endfor %}
-    </ul>
+    <h2>Messages:</h2> 
+</ul>
+<ul>
+    {% for msg in messages %}
+        <li>
+            <strong>{{ msg.name }}</strong>: {{ msg.content }}<br>
+            <small>{{ msg.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</small>
+
+            <form method="POST" action="/delete/{{ msg.id }}" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete this message?')">Delete</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
 </body>
 </html>
