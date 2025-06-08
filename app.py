@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 import os
 
 app = Flask(__name__)
@@ -11,10 +12,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Message model with timestamp
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     content = db.Column(db.String(200), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -26,9 +29,10 @@ def index():
         db.session.commit()
         return redirect("/")
     
-    messages = Message.query.all()
+    messages = Message.query.order_by(Message.timestamp.desc()).all()
     return render_template("index.html", messages=messages)
 
+# ✅ This must come last
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

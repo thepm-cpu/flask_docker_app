@@ -3,7 +3,6 @@
 <head>
     <title>Guestbook</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
 </head>
 <body>
     <h1>Guestbook</h1>
@@ -17,11 +16,13 @@
     </form>
 
     <h2>Messages:</h2>
-<ul>
-    {% for msg in messages %}
-    <li><strong>{{ msg.name }}</strong>: {{ msg.content }}</li>
-    {% endfor %}
-</ul>
-
+    <ul>
+        {% for msg in messages %}
+            <li>
+                <strong>{{ msg.name }}</strong>: {{ msg.content }}<br>
+                <small>{{ msg.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</small>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
