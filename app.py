@@ -16,13 +16,6 @@ class Message(db.Model):
     name = db.Column(db.String(50), nullable=False)
     content = db.Column(db.String(200), nullable=False)
 
-# This ensures database + table is created before first request
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, host="0.0.0.0")
-
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -37,4 +30,6 @@ def index():
     return render_template("index.html", messages=messages)
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, host="0.0.0.0")

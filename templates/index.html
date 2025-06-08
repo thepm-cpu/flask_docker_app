@@ -15,10 +15,11 @@
     </form>
 
     <h2>Messages:</h2>
-    <ul>
-        {% for msg in messages %}
-        <li><strong>{{ msg.name }}</strong>: {{ msg.message }}</li>
-        {% endfor %}
-    </ul>
+<ul>
+    {% for msg in messages %}
+    <li><strong>{{ msg.name }}</strong>: {{ msg.content }}</li>
+    {% endfor %}
+</ul>
+
 </body>
 </html>
