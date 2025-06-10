@@ -1,31 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Guestbook</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body class="animate__animated animate__fadeIn">
+    <div class="container">
+        <h1>Guestbook</h1>
 
-    <h1>Guestbook</h1>
+        {% if is_admin %}
+            <p>Logged in as Admin | <a href="/logout">Logout</a></p>
+        {% else %}
+            <p><a href="/login">Admin Login</a></p>
+        {% endif %}
 
-    {% if is_admin %}
-        <p>Logged in as Admin | <a href="/logout">Logout</a></p>
-    {% else %}
-        <p><a href="/login">Admin Login</a></p>
-    {% endif %}
+        <form method="POST" class="animate__animated animate__fadeInUp">
+            <input type="text" name="name" placeholder="Enter your name" required>
+            <br><br>
+            <textarea name="message" placeholder="Enter your message" required></textarea>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
 
-    <form method="POST">
-        <input type="text" name="name" placeholder="Enter your name" required>
-        <br><br>
-        <textarea name="message" placeholder="Enter your message" required></textarea>
-        <br><br>
-        <button type="submit">Submit</button>
-    </form>
-
-    <h2>Messages:</h2>
-    <ul>
-        {% for msg in messages %}
+        <h2>Messages:</h2>
+        <ul>
+            {% for msg in messages %}
             <li class="animate__animated animate__fadeInUp">
                 <strong>{{ msg.name }}</strong>: {{ msg.content }}
                 <small>({{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }})</small>
@@ -33,8 +34,8 @@
                     <a href="/delete/{{ msg.id }}" style="color:red;">[delete]</a>
                 {% endif %}
             </li>
-        {% endfor %}
-    </ul>
-
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>
