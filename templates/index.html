@@ -7,6 +7,12 @@
 <body>
     <h1>Guestbook</h1>
 
+    {% if is_admin %}
+        <p>Logged in as Admin | <a href="/logout">Logout</a></p>
+    {% else %}
+        <p><a href="/login">Admin Login</a></p>
+    {% endif %}
+
     <form method="POST">
         <input type="text" name="name" placeholder="Enter your name" required>
         <br><br>
@@ -15,20 +21,17 @@
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Messages:</h2> 
-</ul>
-<ul>
-    {% for msg in messages %}
-        <li>
-            <strong>{{ msg.name }}</strong>: {{ msg.content }}<br>
-            <small>{{ msg.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</small>
-
-            <form method="POST" action="/delete/{{ msg.id }}" style="display:inline;">
-                <button type="submit" onclick="return confirm('Delete this message?')">Delete</button>
-            </form>
-        </li>
-    {% endfor %}
-</ul>
-
+    <h2>Messages:</h2>
+    <ul>
+        {% for msg in messages %}
+            <li>
+                <strong>{{ msg.name }}</strong>: {{ msg.content }}
+                <small>({{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }})</small>
+                {% if is_admin %}
+                    <a href="/delete/{{ msg.id }}" style="color:red;">[delete]</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
