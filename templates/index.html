@@ -4,9 +4,9 @@
     <title>Guestbook</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    
 </head>
-<body>
+<body class="animate__animated animate__fadeIn">
+
     <h1>Guestbook</h1>
 
     {% if is_admin %}
@@ -26,7 +26,7 @@
     <h2>Messages:</h2>
     <ul>
         {% for msg in messages %}
-            <li class="animate__animated animate__fadeInUp"></li>
+            <li class="animate__animated animate__fadeInUp">
                 <strong>{{ msg.name }}</strong>: {{ msg.content }}
                 <small>({{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }})</small>
                 {% if is_admin %}
@@ -35,6 +35,6 @@
             </li>
         {% endfor %}
     </ul>
-</body class="animate__animated animate__fadeIn">
 
+</body>
 </html>
