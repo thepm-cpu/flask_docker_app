@@ -47,6 +47,9 @@ A simple guestbook web application built with Flask, styled with CSS, and deploy
 **Problem:** Had to manually deploy via Render dashboard.  
 **Solution:** Integrated GitHub Actions with Render Deploy Hook for CI/CD.
 
+### 9. **Automatic Deployment Faliure**
+**Problem** automatic deployment failed.
+**Solution** Replaced "main" with "master" as origin 
 ---
 
 ##  Tech Stack
